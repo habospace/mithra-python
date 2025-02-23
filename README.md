@@ -29,10 +29,9 @@ class Text:
             self.pointer -= 1
 
 
-T = TypeVar("T")
-
-
-Parser: TypeAlias = Callable[[Text], T | None]
+if TYPE CHECKING:
+    T = TypeVar("T")
+    Parser: TypeAlias = Callable[[Text], T | None]
 
 
 # Important: we might want to try a different parser for the same
@@ -90,19 +89,20 @@ class Variable:
     name: str
 
 
-AstValue: TypeAlias = (
-      int
-    | float
-    | str
-    | list["AstValue"]
-    | Function
-    | FunctionCall
-    | Assignment
-    | Variable
-)
+if TYPE_CHECKING:
+    AstValue: TypeAlias = (
+        int
+        | float
+        | str
+        | list["AstValue"]
+        | Function
+        | FunctionCall
+        | Assignment
+        | Variable
+    )
 
 
-T1, T2 = TypeVar("T1"), TypeVar("T2")
+    T1, T2 = TypeVar("T1"), TypeVar("T2")
 
 
 # A parser:
@@ -141,5 +141,5 @@ def sep_by(main_parser: Parser[T1], sep_parser: Parser[T2]) -> Parser[list[T1]]:
 
     return parser
 
-# check the script for the parser implementations...
+# check the script for rest implementation...
 ```
