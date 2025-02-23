@@ -78,7 +78,7 @@ def run_parser(parser_f: Parser[T]) -> Parser[T]:
     return inner
 
 
-# sometimes we're overconsuming the text in which case we have
+# Sometimes we're overconsuming the text in which case we have
 # to step back (or decr the pointer) after succession.
 # for instance when we parse a number we have to step outside
 # of the number to identify its final digit.
