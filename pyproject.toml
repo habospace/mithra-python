@@ -1,0 +1,20 @@
+[project]
+name = "mithra-python"
+version = "0.1.0"
+description = "A baby interpreted laguage writte in Python."
+authors = [
+    { name = "habospace", email = "avatarokwow@gmail.com" }
+]
+requires-python = ">= 3.12.8"
+
+readme = "README.md"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+dev-dependencies = [
+    "ruff>=0.9.4",
+    "pyright>=1.1.394",
+]
