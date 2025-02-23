@@ -1,8 +1,12 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, TypeVar, Callable, TypeAlias
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from collections.abc import Iterable
+
+
+if TYPE_CHECKING:
+    from typing import TypeVar, Callable, TypeAlias
+    from collections.abc import Iterable
 
 # Instead of just spending most of the time
 # explaining my own language I thought it
