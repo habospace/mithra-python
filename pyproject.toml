@@ -1,7 +1,7 @@
 [project]
 name = "mithra-python"
 version = "0.1.0"
-description = "A baby interpreted laguage writte in Python."
+description = "A baby interpreted language written in Python."
 authors = [
     { name = "habospace", email = "avatarokwow@gmail.com" }
 ]
