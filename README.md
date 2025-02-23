@@ -41,6 +41,7 @@ def run_parser(parser_f: Parser[T]) -> Parser[T]:
 
     return inner
 
+
 @dataclass(frozen=True)
 class Function:
     name: str
@@ -59,9 +60,11 @@ class Assignment:
     var_name: str
     expr: "AstValue"
 
+
 @dataclass(frozen=True)
 class Variable:
     name: str
+
 
 AstValue: TypeAlias = (
       int
@@ -73,6 +76,25 @@ AstValue: TypeAlias = (
     | Assignment
     | Variable
 )
+
+
+T1, T2 = TypeVar("T1"), TypeVar("T2")
+
+
+def sep_by(main_parser: Parser[T1], sep_parser: Parser[T2]) -> Parser[list[T1]]:
+    @run_parser
+    def parser(t: Text) -> list[T1] | None:
+        if (first := main_parser(t)) is None:
+            return None
+        results = [first]
+        while True:
+            if not sep_parser(t):
+                break
+            if next := main_parser(t):
+                results.append(next)
+        return results
+
+    return parser
 
 # check the script for the parser implementations...
 ```
