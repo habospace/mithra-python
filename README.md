@@ -1,7 +1,7 @@
 # mithra-python
 
-**An interpreted language (called mithra) baby project implemented in Python to illustrate concepts such as:**
-- Abstract Syntax Tree (AST) parsing with parser combinators.
+**An interpreted language (called mithra) baby project implemented in Python to illustrate language implementation concepts such as:**
+- Abstract Syntax Tree (AST) parsing with parser combinators
 - evaluation of parsed AST
 
 **This mini project was inspired by the following blogposts and papers:**
