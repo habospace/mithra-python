@@ -1,4 +1,6 @@
-from typing import TypeVar, Callable, TypeAlias
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, TypeVar, Callable, TypeAlias
 from dataclasses import dataclass
 from collections.abc import Iterable
 
@@ -51,16 +53,16 @@ class Text:
             self.pointer -= 1
 
 
-T = TypeVar("T")
+if TYPE_CHECKING:
+    # (t: Text) -> T | None
+    # we use 'None' to indicate failure  for the sake of simplicity
+    # but when you're more serious you'd want to use something that
+    # can carry error context.
+    # would use 'Result' in Rust (I do in fact use it in the Rust version)
+    # or 'Either' in haskell which is essentially the inspiration for result type
 
-# (t: Text) -> T | None
-# we use 'None' to indicate failure  for the sake of simplicity
-# but when you're more serious you'd want to use something that
-# can carry error context.
-# would use 'Result' in Rust (I do in fact use it in the Rust version)
-# or 'Either' in haskell which is essentially the inspiration for result type
-
-Parser: TypeAlias = Callable[[Text], T | None]
+    T = TypeVar("T")
+    Parser: TypeAlias = Callable[[Text], T | None]
 
 # Important: we might want to try a different parser for the same
 # string and we don't want to partially consume the string on a
@@ -132,26 +134,28 @@ class Variable:
     name: str
 
 
-# 'AstValue' is the top level AST
-# type that wraps around all the previous
-# AST types or dataclasses.
-# So 'AstValue' can be any of those
-# dataclasses or some primitive types
-# eg. str or int which don't need any
-# dataclasses, they're good as themeselves.
+if TYPE_CHECKING:
+    # 'AstValue' is the top level AST
+    # type that wraps around all the previous
+    # AST types or dataclasses.
+    # So 'AstValue' can be any of those
+    # dataclasses or some primitive types
+    # eg. str or int which don't need any
+    # dataclasses, they're good as themeselves.
 
-# fmt: off
-AstValue: TypeAlias = (
-      int
-    | float
-    | str
-    | list["AstValue"]
-    | Function
-    | FunctionCall
-    | Assignment
-    | Variable
-)
-# fmt: on
+    # fmt: off
+    AstValue: TypeAlias = (
+        bool
+        | int
+        | float
+        | str
+        | list["AstValue"]
+        | Function
+        | FunctionCall
+        | Assignment
+        | Variable
+    )
+    # fmt: on
 
 
 @run_parser
@@ -220,7 +224,8 @@ def create_string_parser(string: str) -> Parser[str]:
     return parser
 
 
-T1, T2 = TypeVar("T1"), TypeVar("T2")
+if TYPE_CHECKING:
+    T1, T2 = TypeVar("T1"), TypeVar("T2")
 
 
 # parser combinators: create new parsers from other parsers. 'sep_by' takes a
@@ -324,11 +329,11 @@ assert exprs == [
     ),
 ]
 
-
-VarName: TypeAlias = str
-FunctionName: TypeAlias = str
-Number: TypeAlias = int | float
-NumBinOpFunction: TypeAlias = Callable[[Number, Number], Number]
+if TYPE_CHECKING:
+    VarName: TypeAlias = str
+    FunctionName: TypeAlias = str
+    Number: TypeAlias = int | float
+    NumBinOpFunction: TypeAlias = Callable[[Number, Number], Number]
 
 
 class Interpreter:
@@ -358,7 +363,7 @@ class Interpreter:
         # when MithraVal is bottom level primitive val eg.:
         # str or int then we just return it because it's
         # already avaluated to the most pimitive level
-        if isinstance(expr, (int, str)):
+        if isinstance(expr, (int, str, float, bool)):
             return expr
         elif isinstance(assignment := expr, Assignment):
             evaluated_expr = self.eval(assignment.expr)
