@@ -78,6 +78,23 @@ def run_parser(parser_f: Parser[T]) -> Parser[T]:
     return inner
 
 
+# sometimes we're overconsuming the text in which case we have
+# to step back (or decr the pointer) after succession.
+# for instance when we parse a number we have to step outside
+# of the number to identify its final digit.
+# "1234 " -> in this instance we have to consume the " " after "4"
+# to know that the number's last digit is 4.
+
+
+def step_back(parser_f: Parser[T]) -> Parser[T]:
+    def inner(t: Text) -> T | None:
+        if (result := parser_f(t)) is not None:
+            t.decr_pointer()
+        return result
+
+    return inner
+
+
 # What is AST: some structured and managable representation
 # of the expressions of my programming language that I can
 # evaluate. I can't evaluate a raw string into a program
@@ -138,11 +155,11 @@ AstValue: TypeAlias = (
 
 
 @run_parser
+@step_back
 def parse_int(t: Text) -> int | None:
     int_builder = ""
     while char := t.get_next():
         if not char.isdigit():
-            t.decr_pointer()
             break
         int_builder += char
     return int(int_builder) if int_builder else None
@@ -161,11 +178,11 @@ def parse_string(t: Text) -> str | None:
 
 
 @run_parser
+@step_back
 def word(t: Text) -> str | None:
     word_builder = ""
     while char := t.get_next():
         if not char.isalpha():
-            t.decr_pointer()
             break
         word_builder += char
     return word_builder or None
@@ -357,7 +374,7 @@ class Interpreter:
             # fmt: off
             evaluated_args: list[Number] = [
                 self.eval(arg) for arg in f_call.arg_exprs
-            ]  # pyright: ignore[reportAssignmentType]
+            ]  # type: ignore # pyright: ignore[reportAssignmentType]
             # fmt: on
             function = self.default_functions[f_call.name]
             return function(*evaluated_args)
