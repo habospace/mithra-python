@@ -26,6 +26,7 @@ class Text:
         if self.pointer > 0:
             self.pointer -= 1
 
+
 T = TypeVar("T")
 
 
