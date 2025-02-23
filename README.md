@@ -8,7 +8,7 @@
 - monadic parser combinators in haskell: https://www.cs.nott.ac.uk/~pszgmh/monparsing.pdf
 - write yourself a scheme: https://en.wikibooks.org/wiki/Write_Yourself_a_Scheme_in_48_Hours
 
-**Here's a bit from the source code, but please check `src/main.py` if you're interested.
+**Here's a bit from the source code, but please check `src/main.py` if you're interested.**
 
 ```python
 @dataclass
@@ -106,6 +106,7 @@ T1, T2 = TypeVar("T1"), TypeVar("T2")
 
 
 # A parser:
+
 @run_parser
 @step_back
 def parse_int(t: Text) -> int | None:
